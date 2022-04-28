@@ -1,3 +1,5 @@
+use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign};
+
 pub const BITS_SIZE: usize = 0xff + 1;
 
 static BITS_TABLE: [u64; BITS_SIZE] = {
@@ -12,7 +14,7 @@ static BITS_TABLE: [u64; BITS_SIZE] = {
     bits_table
 };
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, PartialEq, Eq)]
 pub struct Bitset([u64; 4]);
 
 impl Bitset {
@@ -70,5 +72,71 @@ impl Bitset {
 
         bytes.truncate(n);
         bytes
+    }
+}
+
+impl BitAnd for Bitset {
+    type Output = Self;
+
+    fn bitand(self, rhs: Self) -> Self::Output {
+        Self([
+            self.0[0] & rhs.0[0],
+            self.0[1] & rhs.0[1],
+            self.0[2] & rhs.0[2],
+            self.0[3] & rhs.0[3],
+        ])
+    }
+}
+
+impl BitAndAssign for Bitset {
+    fn bitand_assign(&mut self, rhs: Self) {
+        self.0[0] &= rhs.0[0];
+        self.0[1] &= rhs.0[1];
+        self.0[2] &= rhs.0[2];
+        self.0[3] &= rhs.0[3];
+    }
+}
+
+impl BitOr for Bitset {
+    type Output = Self;
+
+    fn bitor(self, rhs: Self) -> Self::Output {
+        Self([
+            self.0[0] | rhs.0[0],
+            self.0[1] | rhs.0[1],
+            self.0[2] | rhs.0[2],
+            self.0[3] | rhs.0[3],
+        ])
+    }
+}
+
+impl BitOrAssign for Bitset {
+    fn bitor_assign(&mut self, rhs: Self) {
+        self.0[0] |= rhs.0[0];
+        self.0[1] |= rhs.0[1];
+        self.0[2] |= rhs.0[2];
+        self.0[3] |= rhs.0[3];
+    }
+}
+
+impl BitXor for Bitset {
+    type Output = Self;
+
+    fn bitxor(self, rhs: Self) -> Self::Output {
+        Self([
+            self.0[0] ^ rhs.0[0],
+            self.0[1] ^ rhs.0[1],
+            self.0[2] ^ rhs.0[2],
+            self.0[3] ^ rhs.0[3],
+        ])
+    }
+}
+
+impl BitXorAssign for Bitset {
+    fn bitxor_assign(&mut self, rhs: Self) {
+        self.0[0] ^= rhs.0[0];
+        self.0[1] ^= rhs.0[1];
+        self.0[2] ^= rhs.0[2];
+        self.0[3] ^= rhs.0[3];
     }
 }

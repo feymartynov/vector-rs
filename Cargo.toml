@@ -7,10 +7,15 @@ edition = "2021"
 bench = false
 
 [dependencies]
+rand = "0.8"
 
 [dev-dependencies]
 bencher = "0.1.5"
 
 [[bench]]
 name = "bitset"
+harness = false
+
+[[bench]]
+name = "vector"
 harness = false
