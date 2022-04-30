@@ -4,9 +4,7 @@ extern crate bencher;
 use std::cmp::Ordering;
 
 use bencher::Bencher;
-use vector::bitset::Bitset;
-use vector::test_helpers::rand_array;
-use vector::vector::Vector;
+use vector::{test_helpers::rand_array, Bitset, Vector};
 
 const FIRST_ARRAY_SIZE: usize = 128 * 1024;
 const SECOND_ARRAY_SIZE: usize = 1024 * 1024;

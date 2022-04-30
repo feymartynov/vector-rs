@@ -2,7 +2,7 @@
 extern crate bencher;
 
 use bencher::Bencher;
-use vector::bitset::Bitset;
+use vector::{BITS_SIZE, Bitset};
 
 fn convert_bytes_to_bits(bencher: &mut Bencher) {
     let mut bitset = Bitset::default();
@@ -16,7 +16,7 @@ fn bits_to_bytes_dump<const N: usize>(bencher: &mut Bencher) {
 
     bencher.iter(|| {
         for bitset in &bitsets {
-            let _ = bitset.bits_to_bytes_dump(vec![0; 256]);
+            let _ = bitset.bits_to_bytes_dump(vec![0; BITS_SIZE]);
         }
     })
 }
@@ -26,9 +26,11 @@ fn bits_to_bytes<const N: usize>(bencher: &mut Bencher) {
         .map(|i| Bitset::new([i as u64; 4]))
         .collect::<Vec<_>>();
 
+    let mut bytes = vec![0; BITS_SIZE];
+
     bencher.iter(|| {
         for bitset in &bitsets {
-            let _ = bitset.bits_to_bytes(vec![0; 256]);
+            let _ = bitset.bits_to_bytes(&mut bytes);
         }
     })
 }

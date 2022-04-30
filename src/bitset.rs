@@ -1,8 +1,8 @@
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign};
 
-pub const BITS_SIZE: usize = 0xff + 1;
+pub const BITS_SIZE: usize = 256;
 
-static BITS_TABLE: [u64; BITS_SIZE] = {
+pub static BITS_TABLE: [u64; BITS_SIZE] = {
     let mut bits_table = [0; BITS_SIZE];
     let mut i = 0;
 
@@ -26,6 +26,7 @@ impl Bitset {
         &self.0
     }
 
+    #[inline]
     pub fn bytes_to_bits(&mut self, bytes: &[u8]) {
         for byte in bytes.iter().copied() {
             self.0[(byte >> 6) as usize] |= BITS_TABLE[byte as usize];
@@ -52,7 +53,7 @@ impl Bitset {
         bytes
     }
 
-    pub fn bits_to_bytes(&self, mut bytes: Vec<u8>) -> Vec<u8> {
+    pub fn bits_to_bytes(&self, bytes: &mut [u8]) -> usize {
         let mut n = 0;
 
         for i in 0..4 {
@@ -70,8 +71,7 @@ impl Bitset {
             }
         }
 
-        bytes.truncate(n);
-        bytes
+        n
     }
 }
 

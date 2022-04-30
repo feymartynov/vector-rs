@@ -17,5 +17,9 @@ name = "bitset"
 harness = false
 
 [[bench]]
+name = "iter"
+harness = false
+
+[[bench]]
 name = "vector"
 harness = false

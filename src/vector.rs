@@ -1,9 +1,9 @@
 use std::cmp::Ordering;
 
 #[derive(Debug, Default)]
-struct Header {
-    base: u16,
-    size: u8,
+pub(crate) struct Header {
+    pub(crate) base: u16,
+    pub(crate) size: u8,
 }
 
 impl Header {
@@ -14,9 +14,9 @@ impl Header {
 
 #[derive(Debug, Default)]
 pub struct Vector {
-    head: Vec<Header>,
-    data: Vec<u8>,
-    last: u32,
+    pub(crate) head: Vec<Header>,
+    pub(crate) data: Vec<u8>,
+    pub(crate) last: u32,
 }
 
 impl Vector {

@@ -1,4 +1,4 @@
-use vector::vector::Vector;
+use vector::Vector;
 
 #[test]
 fn add() {
@@ -23,7 +23,7 @@ fn add_last() {
 
 #[test]
 fn from_values() {
-    let vector = Vector::from(vec![1u32, 3, 2]);
+    let vector = Vector::from([1, 3, 2]);
     assert!(!vector.is_empty());
     assert_eq!(vector.as_bytes(), &[1, 3, 2]);
     assert_eq!(vector.len(), 7);
@@ -31,15 +31,24 @@ fn from_values() {
 }
 
 #[test]
+fn from_range() {
+    let vector = Vector::from(1..5);
+    assert!(!vector.is_empty());
+    assert_eq!(vector.as_bytes(), &[1, 2, 3, 4]);
+    assert_eq!(vector.len(), 8);
+    assert_eq!(vector.capacity(), 24);
+}
+
+#[test]
 fn reset() {
-    let mut vector = Vector::from(vec![1u32, 3, 2]);
+    let mut vector = Vector::from([1, 3, 2]);
     vector.reset();
     assert!(vector.is_empty());
 }
 
 #[test]
 fn iter() {
-    let vector = Vector::from(vec![1u32, 2, 1000, 1001, 2000]);
+    let vector = Vector::from([1, 2, 1000, 1001, 2000]);
     let mut it = vector.iter();
     assert_eq!(it.size_hint(), (2, Some(2)));
 
