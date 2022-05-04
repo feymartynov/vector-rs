@@ -2,6 +2,8 @@ use std::cmp::Ordering;
 
 use crate::{Bitset, Iter, IterItem};
 
+///////////////////////////////////////////////////////////////////////////////
+
 #[derive(Debug)]
 pub struct IntersectVec<A: Iter, B: Iter> {
     a: A,

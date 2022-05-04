@@ -2,10 +2,18 @@ use std::fmt::Debug;
 
 use crate::{Bitset, Vector, BITS_SIZE};
 
-#[derive(Debug, PartialEq, Eq)]
+///////////////////////////////////////////////////////////////////////////////
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct IterItem {
     pub base: u16,
     pub bitset: Bitset,
+}
+
+impl IterItem {
+    pub(crate) fn new(base: u16, bitset: Bitset) -> Self {
+        Self { base, bitset }
+    }
 }
 
 pub trait Iter: Iterator<Item = IterItem> + Debug {

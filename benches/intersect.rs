@@ -90,11 +90,11 @@ fn intersect_vec_many_with_unpack(bencher: &mut Bencher) {
 }
 
 fn intersect_complex_many(bencher: &mut Bencher) {
-    let vecs = INTERSECT_SIZE_LIST
+    let fetch_vecs = INTERSECT_SIZE_LIST
         .into_iter()
         .map(|s| FetchVec::new(Vector::from(rand_array(s, max_value(s)))));
 
-    let mut it = IntersectComplex::new(vecs);
+    let mut it = IntersectComplex::new(fetch_vecs);
 
     bencher.iter(|| {
         while let Some(_) = it.next() {}
@@ -103,11 +103,11 @@ fn intersect_complex_many(bencher: &mut Bencher) {
 }
 
 fn intersect_complex_many_with_unpack(bencher: &mut Bencher) {
-    let vecs = INTERSECT_SIZE_LIST
+    let fetch_vecs = INTERSECT_SIZE_LIST
         .into_iter()
         .map(|s| FetchVec::new(Vector::from(rand_array(s, max_value(s)))));
 
-    let mut it = UnpackVec::new(IntersectComplex::new(vecs));
+    let mut it = UnpackVec::new(IntersectComplex::new(fetch_vecs));
 
     bencher.iter(|| {
         while let Some(_) = it.next() {}

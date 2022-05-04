@@ -1,5 +1,7 @@
 use std::cmp::Ordering;
 
+///////////////////////////////////////////////////////////////////////////////
+
 #[derive(Clone, Copy, Debug, Default)]
 pub(crate) struct Header {
     pub(crate) base: u16,

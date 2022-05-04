@@ -14,6 +14,8 @@ pub static BITS_TABLE: [u64; BITS_SIZE] = {
     bits_table
 };
 
+///////////////////////////////////////////////////////////////////////////////
+
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct Bitset([u64; 4]);
 
