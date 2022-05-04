@@ -2,7 +2,7 @@
 extern crate bencher;
 
 use bencher::Bencher;
-use vector::{BITS_SIZE, Bitset};
+use vector::{Bitset, BITS_SIZE};
 
 fn convert_bytes_to_bits(bencher: &mut Bencher) {
     let mut bitset = Bitset::default();

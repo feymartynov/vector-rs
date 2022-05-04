@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 
-#[derive(Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub(crate) struct Header {
     pub(crate) base: u16,
     pub(crate) size: u8,
@@ -12,7 +12,7 @@ impl Header {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct Vector {
     pub(crate) head: Vec<Header>,
     pub(crate) data: Vec<u8>,

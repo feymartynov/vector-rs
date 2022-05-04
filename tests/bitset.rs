@@ -23,6 +23,16 @@ fn convert_bits_to_bytes() {
 }
 
 #[test]
+fn is_zero() {
+    assert!(Bitset::new([0, 0, 0, 0]).is_zero());
+    assert!(!Bitset::new([0, 0, 0, 1]).is_zero());
+    assert!(!Bitset::new([0, 0, 1, 0]).is_zero());
+    assert!(!Bitset::new([0, 1, 0, 0]).is_zero());
+    assert!(!Bitset::new([1, 0, 0, 0]).is_zero());
+    assert!(!Bitset::new([1, 1, 1, 1]).is_zero());
+}
+
+#[test]
 fn bit_and() {
     let x = Bitset::new([1, 2, 3, 4]) & Bitset::new([5, 6, 7, 8]);
     assert_eq!(x, Bitset::new([1, 2, 3, 0]));

@@ -4,11 +4,8 @@ extern crate bencher;
 use std::cmp::Ordering;
 
 use bencher::Bencher;
-use vector::{test_helpers::rand_array, Bitset, Vector};
-
-const FIRST_ARRAY_SIZE: usize = 128 * 1024;
-const SECOND_ARRAY_SIZE: usize = 1024 * 1024;
-const MAX_ARRAY_VALUE: u32 = 16 * 1024 * 1024;
+use vector::test_helpers::{rand_array, FIRST_ARRAY_SIZE, MAX_ARRAY_VALUE, SECOND_ARRAY_SIZE};
+use vector::{Bitset, Vector};
 
 fn intersect_array(bencher: &mut Bencher) {
     let a = rand_array(FIRST_ARRAY_SIZE, MAX_ARRAY_VALUE);

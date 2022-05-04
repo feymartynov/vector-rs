@@ -17,6 +17,10 @@ name = "bitset"
 harness = false
 
 [[bench]]
+name = "intersect"
+harness = false
+
+[[bench]]
 name = "iter"
 harness = false
 

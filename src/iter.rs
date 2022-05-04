@@ -1,13 +1,21 @@
+use std::fmt::Debug;
+
 use crate::{Bitset, Vector, BITS_SIZE};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct IterItem {
     pub base: u16,
     pub bitset: Bitset,
 }
 
-pub trait Iter: Iterator<Item = IterItem> {
+pub trait Iter: Iterator<Item = IterItem> + Debug {
     fn reset(&mut self);
+}
+
+impl Iter for Box<dyn Iter> {
+    fn reset(&mut self) {
+        self.as_mut().reset()
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,7 +76,9 @@ pub struct UnpackVec<I: Iter> {
 }
 
 impl<I: Iter> UnpackVec<I> {
-    pub fn new(it: I) -> Self {
+    pub fn new(mut it: I) -> Self {
+        it.reset();
+
         Self {
             it,
             base: 0,

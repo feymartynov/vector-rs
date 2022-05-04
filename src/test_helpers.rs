@@ -1,5 +1,26 @@
 use rand::Rng;
 
+pub const FIRST_ARRAY_SIZE: usize = 128 * 1024;
+pub const SECOND_ARRAY_SIZE: usize = 1024 * 1024;
+pub const MAX_ARRAY_VALUE: u32 = 16 * 1024 * 1024;
+
+pub const INTERSECT_SIZE_LIST: [usize; 10] = [
+    FIRST_ARRAY_SIZE,
+    SECOND_ARRAY_SIZE,
+    FIRST_ARRAY_SIZE,
+    FIRST_ARRAY_SIZE,
+    SECOND_ARRAY_SIZE,
+    FIRST_ARRAY_SIZE,
+    SECOND_ARRAY_SIZE,
+    SECOND_ARRAY_SIZE,
+    SECOND_ARRAY_SIZE,
+    FIRST_ARRAY_SIZE,
+];
+
+pub fn max_value(x: usize) -> u32 {
+    x as u32
+}
+
 pub fn rand_array(n: usize, m: u32) -> Vec<u32> {
     let mut rng = rand::thread_rng();
 
