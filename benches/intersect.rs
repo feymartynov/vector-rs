@@ -3,14 +3,13 @@ extern crate bencher;
 
 use bencher::Bencher;
 use vector::test_helpers::{
-    max_value, rand_array, FIRST_ARRAY_SIZE, INTERSECT_SIZE_LIST, MAX_ARRAY_VALUE,
-    SECOND_ARRAY_SIZE,
+    max_value, rand_array, FIRST_ARRAY_SIZE, INTERSECT_SIZE_LIST, SECOND_ARRAY_SIZE,
 };
 use vector::{FetchVec, IntersectComplex, IntersectVec, Iter, UnpackVec, Vector};
 
 fn intersect_vec(bencher: &mut Bencher) {
-    let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, MAX_ARRAY_VALUE));
-    let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, MAX_ARRAY_VALUE));
+    let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, max_value(FIRST_ARRAY_SIZE)));
+    let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, max_value(SECOND_ARRAY_SIZE)));
     let mut it = IntersectVec::new(FetchVec::new(v0), FetchVec::new(v1));
 
     bencher.iter(|| {
@@ -20,8 +19,8 @@ fn intersect_vec(bencher: &mut Bencher) {
 }
 
 fn intersect_vec_with_unpack(bencher: &mut Bencher) {
-    let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, MAX_ARRAY_VALUE));
-    let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, MAX_ARRAY_VALUE));
+    let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, max_value(FIRST_ARRAY_SIZE)));
+    let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, max_value(SECOND_ARRAY_SIZE)));
     let mut it = UnpackVec::new(IntersectVec::new(FetchVec::new(v0), FetchVec::new(v1)));
 
     bencher.iter(|| {
@@ -31,8 +30,8 @@ fn intersect_vec_with_unpack(bencher: &mut Bencher) {
 }
 
 fn intersect_complex(bencher: &mut Bencher) {
-    let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, MAX_ARRAY_VALUE));
-    let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, MAX_ARRAY_VALUE));
+    let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, max_value(FIRST_ARRAY_SIZE)));
+    let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, max_value(SECOND_ARRAY_SIZE)));
     let mut it = IntersectComplex::new([FetchVec::new(v0), FetchVec::new(v1)].into_iter());
 
     bencher.iter(|| {
@@ -42,8 +41,8 @@ fn intersect_complex(bencher: &mut Bencher) {
 }
 
 fn intersect_complex_with_unpack(bencher: &mut Bencher) {
-    let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, MAX_ARRAY_VALUE));
-    let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, MAX_ARRAY_VALUE));
+    let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, max_value(FIRST_ARRAY_SIZE)));
+    let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, max_value(SECOND_ARRAY_SIZE)));
     let it = IntersectComplex::new([FetchVec::new(v0), FetchVec::new(v1)].into_iter());
     let mut it = UnpackVec::new(it);
 
