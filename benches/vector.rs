@@ -46,10 +46,10 @@ fn intersect_vector(bencher: &mut Bencher) {
                 Ordering::Greater => v1_item = v1_it.next(),
                 Ordering::Equal => {
                     let mut r0 = Bitset::default();
-                    r0.bytes_to_bits(&v0_value.data);
+                    r0.load_bytes(&v0_value.data);
 
                     let mut r1 = Bitset::default();
-                    r1.bytes_to_bits(&v1_value.data);
+                    r1.load_bytes(&v1_value.data);
 
                     r0 &= r1;
                     v0_item = v0_it.next();
@@ -101,16 +101,16 @@ fn union_vector(bencher: &mut Bencher) {
 
             match v0_value.base.cmp(&v1_value.base) {
                 Ordering::Less => {
-                    rx.bytes_to_bits(v0_value.data);
+                    rx.load_bytes(v0_value.data);
                     v0_item = v0_it.next();
                 }
                 Ordering::Greater => {
-                    rx.bytes_to_bits(v1_value.data);
+                    rx.load_bytes(v1_value.data);
                     v1_item = v1_it.next();
                 }
                 Ordering::Equal => {
-                    rx.bytes_to_bits(v0_value.data);
-                    rx.bytes_to_bits(v1_value.data);
+                    rx.load_bytes(v0_value.data);
+                    rx.load_bytes(v1_value.data);
                     v0_item = v0_it.next();
                     v1_item = v1_it.next();
                 }
@@ -119,12 +119,12 @@ fn union_vector(bencher: &mut Bencher) {
 
         for value in v0_it {
             let mut rx = Bitset::default();
-            rx.bytes_to_bits(value.data);
+            rx.load_bytes(value.data);
         }
 
         for value in v1_it {
             let mut rx = Bitset::default();
-            rx.bytes_to_bits(value.data);
+            rx.load_bytes(value.data);
         }
     });
 }

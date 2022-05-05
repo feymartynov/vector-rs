@@ -54,7 +54,7 @@ impl Iterator for FetchVec {
             let base = head.base;
             let n = self.offset + head.size as usize + 1;
             let mut bitset = Bitset::default();
-            bitset.bytes_to_bits(&self.vector.data[self.offset..n]);
+            bitset.load_bytes(&self.vector.data[self.offset..n]);
             self.position += 1;
             self.offset = n;
             Some(IterItem { base, bitset })
@@ -79,7 +79,7 @@ pub struct UnpackVec<I: Iter> {
     it: I,
     base: u16,
     i: u16,
-    values: Vec<u8>,
+    values: [u8; BITS_SIZE],
     len: usize,
 }
 
@@ -91,7 +91,7 @@ impl<I: Iter> UnpackVec<I> {
             it,
             base: 0,
             i: 0,
-            values: vec![0; BITS_SIZE],
+            values: [0; BITS_SIZE],
             len: 0,
         }
     }
@@ -112,7 +112,7 @@ impl<I: Iter> Iterator for UnpackVec<I> {
         if self.i as usize >= self.len {
             if let Some(item) = self.it.next() {
                 self.base = item.base;
-                self.len = item.bitset.bits_to_bytes(&mut self.values);
+                self.len = item.bitset.to_bytes(&mut self.values);
                 self.i = 0;
             } else {
                 return None;

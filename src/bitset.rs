@@ -28,14 +28,13 @@ impl Bitset {
         &self.0
     }
 
-    #[inline]
-    pub fn bytes_to_bits(&mut self, bytes: &[u8]) {
+    pub fn load_bytes(&mut self, bytes: &[u8]) {
         for byte in bytes.iter().copied() {
             self.0[(byte >> 6) as usize] |= BITS_TABLE[byte as usize];
         }
     }
 
-    pub fn bits_to_bytes_dump(&self, mut bytes: Vec<u8>) -> Vec<u8> {
+    pub fn to_bytes_dump(&self, bytes: &mut Vec<u8>) {
         bytes.clear();
 
         for i in 0..4 {
@@ -51,11 +50,9 @@ impl Bitset {
                 }
             }
         }
-
-        bytes
     }
 
-    pub fn bits_to_bytes(&self, bytes: &mut [u8]) -> usize {
+    pub fn to_bytes(&self, bytes: &mut [u8; 256]) -> usize {
         let mut n = 0;
 
         for i in 0..4 {

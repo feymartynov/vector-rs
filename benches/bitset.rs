@@ -6,7 +6,7 @@ use vector::{Bitset, BITS_SIZE};
 
 fn convert_bytes_to_bits(bencher: &mut Bencher) {
     let mut bitset = Bitset::default();
-    bencher.iter(|| bitset.bytes_to_bits(&[1, 4, 128, 200, 240]));
+    bencher.iter(|| bitset.load_bytes(&[1, 4, 128, 200, 240]));
 }
 
 fn bits_to_bytes_dump<const N: usize>(bencher: &mut Bencher) {
@@ -14,9 +14,11 @@ fn bits_to_bytes_dump<const N: usize>(bencher: &mut Bencher) {
         .map(|i| Bitset::new([i as u64; 4]))
         .collect::<Vec<_>>();
 
+    let mut bytes = vec![0; BITS_SIZE];
+
     bencher.iter(|| {
         for bitset in &bitsets {
-            let _ = bitset.bits_to_bytes_dump(vec![0; BITS_SIZE]);
+            bitset.to_bytes_dump(&mut bytes);
         }
     })
 }
@@ -26,11 +28,11 @@ fn bits_to_bytes<const N: usize>(bencher: &mut Bencher) {
         .map(|i| Bitset::new([i as u64; 4]))
         .collect::<Vec<_>>();
 
-    let mut bytes = vec![0; BITS_SIZE];
+    let mut bytes = [0; BITS_SIZE];
 
     bencher.iter(|| {
         for bitset in &bitsets {
-            let _ = bitset.bits_to_bytes(&mut bytes);
+            let _ = bitset.to_bytes(&mut bytes);
         }
     })
 }
