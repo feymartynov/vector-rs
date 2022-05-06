@@ -52,7 +52,7 @@ impl Bitset {
         }
     }
 
-    pub fn to_bytes(&self, bytes: &mut [u8; 256]) -> usize {
+    pub fn to_bytes(&self, bytes: &mut [u8]) -> usize {
         let mut n = 0;
 
         for i in 0..4 {
@@ -62,7 +62,8 @@ impl Bitset {
 
             while rv != 0 {
                 let mut x = rv.trailing_zeros();
-                bytes[n] = (x + v) as u8 + off;
+                let byte = unsafe { bytes.get_unchecked_mut(n) };
+                *byte = (x + v) as u8 + off;
                 n += 1;
                 x += 1;
                 v += x;

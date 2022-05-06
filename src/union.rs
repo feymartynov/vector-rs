@@ -136,11 +136,11 @@ impl<T: Iter> Iterator for UnionComplex<T> {
 
         // TODO: Rewrite with `Vec::drain_filter` when stabilized.
         while i < self.items.len() {
-            let item = &mut self.items[i];
+            let item = unsafe { self.items.get_unchecked_mut(i) };
 
             if item.iter_item.base == self.current_base {
                 bitset |= item.iter_item.bitset;
-                let origin = &mut self.origin[item.origin_idx];
+                let origin = unsafe { self.origin.get_unchecked_mut(item.origin_idx) };
 
                 match origin.next() {
                     Some(next) => {

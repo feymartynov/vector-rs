@@ -2,7 +2,7 @@
 extern crate bencher;
 
 use bencher::Bencher;
-use vector::test_helpers::{rand_array, max_value, FIRST_ARRAY_SIZE, SECOND_ARRAY_SIZE};
+use vector::test_helpers::{max_value, rand_array, FIRST_ARRAY_SIZE, SECOND_ARRAY_SIZE};
 use vector::{ExceptVec, FetchVec, Iter, UnpackVec, Vector};
 
 fn except_vec(bencher: &mut Bencher) {

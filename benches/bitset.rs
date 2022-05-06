@@ -13,7 +13,7 @@ fn bits_to_bytes_dump<const N: usize>(bencher: &mut Bencher) {
     let bitsets = (0..N)
         .map(|i| Bitset::new([i as u64; 4]))
         .collect::<Vec<_>>();
-
+        
     let mut bytes = vec![0; BITS_SIZE];
 
     bencher.iter(|| {
@@ -32,7 +32,7 @@ fn bits_to_bytes<const N: usize>(bencher: &mut Bencher) {
 
     bencher.iter(|| {
         for bitset in &bitsets {
-            let _ = bitset.to_bytes(&mut bytes);
+            bitset.to_bytes(&mut bytes);
         }
     })
 }
