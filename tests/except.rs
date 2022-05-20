@@ -9,7 +9,7 @@ fn except_vec() {
     let b: &[u32] = &[1, 10, 20, 30, 40, 50, 60, 260, 272];
     let v1 = Vector::from(a.iter().copied());
     let v2 = Vector::from(b.iter().copied());
-    let it = UnpackVec::new(ExceptVec::new(FetchVec::new(v1), FetchVec::new(v2)));
+    let it = UnpackVec::new(ExceptVec::new(FetchVec::new(&v1), FetchVec::new(&v2)));
     assert_eq!(it.collect::<Vec<_>>(), [5, 15, 25, 35, 45]);
 }
 
@@ -32,11 +32,9 @@ fn except_equals() {
         values.into_iter().collect::<Vec<_>>()
     };
 
-    let ev = ExceptVec::new(
-        FetchVec::new(Vector::from(a)),
-        FetchVec::new(Vector::from(b)),
-    );
-
+    let va = Vector::from(a);
+    let vb = Vector::from(b);
+    let ev = ExceptVec::new(FetchVec::new(&va), FetchVec::new(&vb));
     let ev_values = UnpackVec::new(ev).collect::<Vec<_>>();
     assert_eq!(ev_values, expected);
 }
@@ -45,7 +43,7 @@ fn except_equals() {
 fn except_same_arrays() {
     let a: &[u32] = &[1, 10, 20, 30, 40, 50, 60, 70];
     let v = Vector::from(a.iter().copied());
-    let mut it = UnpackVec::new(ExceptVec::new(FetchVec::new(v.clone()), FetchVec::new(v)));
+    let mut it = UnpackVec::new(ExceptVec::new(FetchVec::new(&v), FetchVec::new(&v)));
     assert!(it.next().is_none());
 }
 
@@ -55,16 +53,13 @@ fn except_empty() {
     let v = Vector::from(a.iter().copied().map(|x| x as u32));
     let e = Vector::new();
 
-    let it = UnpackVec::new(ExceptVec::new(
-        FetchVec::new(v.clone()),
-        FetchVec::new(e.clone()),
-    ));
+    let it = UnpackVec::new(ExceptVec::new(FetchVec::new(&v), FetchVec::new(&e)));
     assert_eq!(it.collect::<Vec<_>>(), a);
 
-    let mut it = UnpackVec::new(ExceptVec::new(FetchVec::new(e.clone()), FetchVec::new(v)));
+    let mut it = UnpackVec::new(ExceptVec::new(FetchVec::new(&e), FetchVec::new(&v)));
     assert!(it.next().is_none());
 
-    let mut it = UnpackVec::new(ExceptVec::new(FetchVec::new(e.clone()), FetchVec::new(e)));
+    let mut it = UnpackVec::new(ExceptVec::new(FetchVec::new(&e), FetchVec::new(&e)));
     assert!(it.next().is_none());
 }
 
@@ -76,10 +71,10 @@ fn except_reset() {
     let v1 = Vector::from(b.iter().copied());
     let expected = [1, 20, 30, 40, 50, 60];
 
-    let mut it = UnpackVec::new(ExceptVec::new(FetchVec::new(v0), FetchVec::new(v1)));
+    let mut it = UnpackVec::new(ExceptVec::new(FetchVec::new(&v0), FetchVec::new(&v1)));
     let mut values = Vec::new();
 
-    while let Some(value) = it.next() {
+    for value in it.by_ref() {
         values.push(value);
     }
 
@@ -87,7 +82,7 @@ fn except_reset() {
     values.clear();
     it.reset();
 
-    while let Some(value) = it.next() {
+    for value in it.by_ref() {
         values.push(value);
     }
 

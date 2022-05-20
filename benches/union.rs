@@ -11,10 +11,10 @@ const SIZE_LIST: [usize; 135] = [FIRST_ARRAY_SIZE, 64316, SECOND_ARRAY_SIZE, 131
 fn union_complex(bencher: &mut Bencher) {
     let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, MAX_ARRAY_VALUE));
     let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, MAX_ARRAY_VALUE));
-    let mut it = UnionComplex::new(vec![FetchVec::new(v0), FetchVec::new(v1)]);
+    let mut it = UnionComplex::new(vec![FetchVec::new(&v0), FetchVec::new(&v1)]);
 
     bencher.iter(|| {
-        while let Some(_) = it.next() {}
+        for _ in it.by_ref() {}
         it.reset();
     })
 }
@@ -22,33 +22,36 @@ fn union_complex(bencher: &mut Bencher) {
 fn union_vec(bencher: &mut Bencher) {
     let v0 = Vector::from(rand_array(FIRST_ARRAY_SIZE, MAX_ARRAY_VALUE));
     let v1 = Vector::from(rand_array(SECOND_ARRAY_SIZE, MAX_ARRAY_VALUE));
-    let mut it = UnionVec::new(FetchVec::new(v0), FetchVec::new(v1));
+    let mut it = UnionVec::new(FetchVec::new(&v0), FetchVec::new(&v1));
 
     bencher.iter(|| {
-        while let Some(_) = it.next() {}
+        for _ in it.by_ref() {}
         it.reset();
     })
 }
 
 fn union_complex_many(bencher: &mut Bencher) {
-    let fetch_vecs = SIZE_LIST
+    let vecs = SIZE_LIST
         .into_iter()
-        .map(|s| FetchVec::new(Vector::from(rand_array(s, MAX_ARRAY_VALUE))))
+        .map(|s| Vector::from(rand_array(s, MAX_ARRAY_VALUE)))
         .collect::<Vec<_>>();
 
+    let fetch_vecs = vecs.iter().map(FetchVec::new).collect::<Vec<_>>();
     let mut it = UnionComplex::new(fetch_vecs);
 
     bencher.iter(|| {
-        while let Some(_) = it.next() {}
+        for _ in it.by_ref() {}
         it.reset();
     })
 }
 
 fn union_vec_many(bencher: &mut Bencher) {
-    let mut fetch_vecs = SIZE_LIST
+    let vecs = SIZE_LIST
         .into_iter()
-        .map(|s| FetchVec::new(Vector::from(rand_array(s, MAX_ARRAY_VALUE))))
+        .map(|s| Vector::from(rand_array(s, MAX_ARRAY_VALUE)))
         .collect::<Vec<_>>();
+
+    let mut fetch_vecs = vecs.iter().map(FetchVec::new).collect::<Vec<_>>();
 
     let mut it = Box::new(UnionVec::new(
         fetch_vecs.pop().unwrap(),
@@ -60,7 +63,7 @@ fn union_vec_many(bencher: &mut Bencher) {
     }
 
     bencher.iter(|| {
-        while let Some(_) = it.next() {}
+        for _ in it.by_ref() {}
         it.reset();
     })
 }

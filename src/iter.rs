@@ -20,7 +20,7 @@ pub trait Iter: Iterator<Item = IterItem> + Debug {
     fn reset(&mut self);
 }
 
-impl Iter for Box<dyn Iter> {
+impl<'a> Iter for Box<dyn Iter + 'a> {
     fn reset(&mut self) {
         self.as_mut().reset()
     }
@@ -29,14 +29,14 @@ impl Iter for Box<dyn Iter> {
 ///////////////////////////////////////////////////////////////////////////////
 
 #[derive(Debug)]
-pub struct FetchVec {
+pub struct FetchVec<'a> {
     position: usize,
     offset: usize,
-    vector: Vector,
+    vector: &'a Vector,
 }
 
-impl FetchVec {
-    pub fn new(vector: Vector) -> Self {
+impl<'a> FetchVec<'a> {
+    pub fn new(vector: &'a Vector) -> Self {
         Self {
             position: 0,
             offset: 0,
@@ -45,7 +45,7 @@ impl FetchVec {
     }
 }
 
-impl Iterator for FetchVec {
+impl<'a> Iterator for FetchVec<'a> {
     type Item = IterItem;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -64,7 +64,7 @@ impl Iterator for FetchVec {
     }
 }
 
-impl Iter for FetchVec {
+impl<'a> Iter for FetchVec<'a> {
     fn reset(&mut self) {
         self.position = 0;
         self.offset = 0;

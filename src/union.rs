@@ -230,21 +230,21 @@ impl<T: Iter> Iter for Union<T> {
 ///////////////////////////////////////////////////////////////////////////////
 
 #[derive(Debug, Default)]
-pub struct Builder {
-    source: Vec<FetchVec>,
+pub struct Builder<'a> {
+    source: Vec<FetchVec<'a>>,
 }
 
-impl Builder {
+impl<'a> Builder<'a> {
     pub fn new() -> Self {
         Self { source: Vec::new() }
     }
 
-    pub fn add(&mut self, vec: Vector) -> &mut Self {
+    pub fn add(&mut self, vec: &'a Vector) -> &mut Self {
         self.source.push(FetchVec::new(vec));
         self
     }
 
-    pub fn build(self) -> Union<FetchVec> {
+    pub fn build(self) -> Union<FetchVec<'a>> {
         match self.source.len() {
             0 => Union::Empty(Empty::new()),
             1 => Union::Single(self.source.into_iter().next().unwrap()),

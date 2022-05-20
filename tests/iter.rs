@@ -2,7 +2,8 @@ use vector::{Empty, FetchVec, Iter, UnpackVec, Vector};
 
 #[test]
 fn fetch_vec_solid() {
-    let unpack_vec = UnpackVec::new(FetchVec::new(Vector::from(1..255)));
+    let v = Vector::from(1..255);
+    let unpack_vec = UnpackVec::new(FetchVec::new(&v));
     let values = unpack_vec.collect::<Vec<_>>();
     assert_eq!(values, (1..255).into_iter().collect::<Vec<_>>());
 }
@@ -16,7 +17,7 @@ fn fetch_vec_with_duplicates() {
         vector.add(i as u32);
     }
 
-    let values = UnpackVec::new(FetchVec::new(vector)).collect::<Vec<_>>();
+    let values = UnpackVec::new(FetchVec::new(&vector)).collect::<Vec<_>>();
     assert_eq!(values, [0, 1, 2, 3, 4, 5]);
 }
 
@@ -24,7 +25,7 @@ fn fetch_vec_with_duplicates() {
 fn fetch_unpack_vec() {
     let expected = [8i32, 320, 1536, 1544, 266752, 266800, 791088];
     let vector = Vector::from([8u32, 320, 1536, 1544, 266752, 266800, 791088]);
-    let mut unpack = UnpackVec::new(FetchVec::new(vector));
+    let mut unpack = UnpackVec::new(FetchVec::new(&vector));
     let mut values = Vec::new();
 
     for value in &mut unpack {

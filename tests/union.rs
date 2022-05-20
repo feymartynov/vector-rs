@@ -18,13 +18,18 @@ fn union_complex_fetch() {
         .map(|v| *v as i32)
         .collect::<Vec<_>>();
 
-    expected.sort();
+    expected.sort_unstable();
+
+    let v4 = Vector::from(v4);
+    let v3 = Vector::from(v3);
+    let v2 = Vector::from(v2);
+    let v1 = Vector::from(v1);
 
     let it = UnionComplex::new(vec![
-        FetchVec::new(Vector::from(v4)),
-        FetchVec::new(Vector::from(v3)),
-        FetchVec::new(Vector::from(v2)),
-        FetchVec::new(Vector::from(v1)),
+        FetchVec::new(&v4),
+        FetchVec::new(&v3),
+        FetchVec::new(&v2),
+        FetchVec::new(&v1),
     ]);
 
     let values = UnpackVec::new(it).collect::<Vec<_>>();
@@ -46,17 +51,19 @@ fn union_vec_fetch() {
         .map(|v| *v as i32)
         .collect::<Vec<_>>();
 
-    expected.sort();
+    expected.sort_unstable();
+
+    let v1 = Vector::from(v1);
+    let v2 = Vector::from(v2);
+    let v3 = Vector::from(v3);
+    let v4 = Vector::from(v4);
 
     let it = UnionVec::new(
         UnionVec::new(
-            UnionVec::new(
-                FetchVec::new(Vector::from(v1)),
-                FetchVec::new(Vector::from(v2)),
-            ),
-            FetchVec::new(Vector::from(v3)),
+            UnionVec::new(FetchVec::new(&v1), FetchVec::new(&v2)),
+            FetchVec::new(&v3),
         ),
-        FetchVec::new(Vector::from(v4)),
+        FetchVec::new(&v4),
     );
 
     let values = UnpackVec::new(it).collect::<Vec<_>>();
@@ -71,11 +78,11 @@ fn union_equals() {
 
     let v0 = Vector::from(a);
     let v1 = Vector::from(b);
-    let uv = UnionVec::new(FetchVec::new(v0.clone()), FetchVec::new(v1.clone()));
+    let uv = UnionVec::new(FetchVec::new(&v0), FetchVec::new(&v1));
     let uv_values = UnpackVec::new(uv).collect::<Vec<_>>();
     assert_eq!(uv_values, expected);
 
-    let uc = UnionComplex::new(vec![FetchVec::new(v0), FetchVec::new(v1)]);
+    let uc = UnionComplex::new(vec![FetchVec::new(&v0), FetchVec::new(&v1)]);
     let uc_values = UnpackVec::new(uc).collect::<Vec<_>>();
     assert_eq!(uc_values, expected);
 }
@@ -83,9 +90,9 @@ fn union_equals() {
 #[test]
 fn union_same_arrays() {
     let v = Vector::from([1, 10, 20, 30, 40, 50, 60, 70]);
-    let uv = UnionVec::new(FetchVec::new(v.clone()), FetchVec::new(v.clone()));
+    let uv = UnionVec::new(FetchVec::new(&v), FetchVec::new(&v));
     let uv_values = UnpackVec::new(uv).collect::<Vec<_>>();
-    let uc = UnionComplex::new(vec![FetchVec::new(v.clone()), FetchVec::new(v)]);
+    let uc = UnionComplex::new(vec![FetchVec::new(&v), FetchVec::new(&v)]);
     let uc_values = UnpackVec::new(uc).collect::<Vec<_>>();
     assert_eq!(uv_values, uc_values);
 }
@@ -97,19 +104,19 @@ fn union_empty() {
     let v = Vector::from(values);
     let e = Vector::new();
 
-    let fetch_vecs = vec![FetchVec::new(v.clone()), FetchVec::new(e.clone())];
+    let fetch_vecs = vec![FetchVec::new(&v), FetchVec::new(&e)];
     let it = UnionComplex::new(fetch_vecs);
     assert_eq!(UnpackVec::new(it).collect::<Vec<_>>(), expected);
 
-    let fetch_vecs = vec![FetchVec::new(e.clone()), FetchVec::new(e.clone())];
+    let fetch_vecs = vec![FetchVec::new(&e), FetchVec::new(&e)];
     let it = UnionComplex::new(fetch_vecs);
-    assert!(UnpackVec::new(it).collect::<Vec<_>>().is_empty());
+    assert!(UnpackVec::new(it).next().is_none());
 
-    let it = UnionVec::new(FetchVec::new(v), FetchVec::new(e.clone()));
+    let it = UnionVec::new(FetchVec::new(&v), FetchVec::new(&e));
     assert_eq!(UnpackVec::new(it).collect::<Vec<_>>(), expected);
 
-    let it = UnionVec::new(FetchVec::new(e.clone()), FetchVec::new(e));
-    assert!(UnpackVec::new(it).collect::<Vec<_>>().is_empty());
+    let it = UnionVec::new(FetchVec::new(&e), FetchVec::new(&e));
+    assert!(UnpackVec::new(it).next().is_none());
 }
 
 #[test]
@@ -117,12 +124,12 @@ fn union_complex_reset() {
     let expected = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90];
     let v0 = Vector::from([1, 10, 20, 30, 40, 50, 60, 70]);
     let v1 = Vector::from([80, 90]);
-    let fetch_vecs = vec![FetchVec::new(v0), FetchVec::new(v1)];
+    let fetch_vecs = vec![FetchVec::new(&v0), FetchVec::new(&v1)];
     let mut it = UnpackVec::new(UnionComplex::new(fetch_vecs));
 
     let mut values = Vec::new();
 
-    while let Some(value) = it.next() {
+    for value in it.by_ref() {
         values.push(value);
     }
 
@@ -130,7 +137,7 @@ fn union_complex_reset() {
     values.clear();
     it.reset();
 
-    while let Some(value) = it.next() {
+    for value in it.by_ref() {
         values.push(value);
     }
 
@@ -142,11 +149,10 @@ fn union_vec_reset() {
     let expected = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90];
     let v0 = Vector::from([1, 10, 20, 30, 40, 50, 60, 70]);
     let v1 = Vector::from([80, 90]);
-    let mut it = UnpackVec::new(UnionVec::new(FetchVec::new(v0), FetchVec::new(v1)));
-
+    let mut it = UnpackVec::new(UnionVec::new(FetchVec::new(&v0), FetchVec::new(&v1)));
     let mut values = Vec::new();
 
-    while let Some(value) = it.next() {
+    for value in it.by_ref() {
         values.push(value);
     }
 
@@ -154,7 +160,7 @@ fn union_vec_reset() {
     values.clear();
     it.reset();
 
-    while let Some(value) = it.next() {
+    for value in it.by_ref() {
         values.push(value);
     }
 

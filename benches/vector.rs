@@ -18,7 +18,7 @@ fn intersect_array(bencher: &mut Bencher) {
         let mut b_item = b_it.next();
 
         while let (Some(a_value), Some(b_value)) = (a_item, b_item) {
-            match a_value.cmp(&b_value) {
+            match a_value.cmp(b_value) {
                 Ordering::Less => a_item = a_it.next(),
                 Ordering::Greater => b_item = b_it.next(),
                 Ordering::Equal => {
@@ -46,10 +46,10 @@ fn intersect_vector(bencher: &mut Bencher) {
                 Ordering::Greater => v1_item = v1_it.next(),
                 Ordering::Equal => {
                     let mut r0 = Bitset::default();
-                    r0.load_bytes(&v0_value.data);
+                    r0.load_bytes(v0_value.data);
 
                     let mut r1 = Bitset::default();
-                    r1.load_bytes(&v1_value.data);
+                    r1.load_bytes(v1_value.data);
 
                     r0 &= r1;
                     v0_item = v0_it.next();
@@ -71,7 +71,7 @@ fn union_array(bencher: &mut Bencher) {
         let mut b_item = b_it.next();
 
         while let (Some(a_value), Some(b_value)) = (a_item, b_item) {
-            match a_value.cmp(&b_value) {
+            match a_value.cmp(b_value) {
                 Ordering::Less => a_item = a_it.next(),
                 Ordering::Greater => b_item = b_it.next(),
                 Ordering::Equal => {
